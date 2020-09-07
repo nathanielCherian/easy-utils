@@ -1,5 +1,5 @@
 from .base import BaseFile, BaseBatchFiles
-from PIL import Image
+from PIL import Image, ImageGrab
 import os
 
 class ImageFile(BaseFile):
@@ -52,6 +52,14 @@ class ImageBatchFiles(BaseBatchFiles):
         image.save(save_path, self.PIL_KEYS[to_format])
 
         super().convert_file(original=name+'.'+extension, result=save_path)
+
+
+
+#Miscellanous functions
+def image_from_clipboard(filename='image.png'):
+    image = ImageGrab.grabclipboard()
+    image.save(filename, 'PNG')
+    print("Image saved from clipboard!")
 
 
 

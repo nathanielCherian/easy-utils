@@ -1,5 +1,5 @@
 from . import __title__, __version__
-from .images import ImageFile, ImageBatchFiles
+from .images import ImageFile, ImageBatchFiles, image_from_clipboard
 from .base import BaseBatchFiles
 
 import argparse
@@ -19,11 +19,22 @@ def parse_args():
 
     return args
 
+
+commands = {
+    "/cb":lambda filename: image_from_clipboard(filename=filename)
+}
+
+
 def main():
     
     args = parse_args()
 
     print(args.base_file, args.desired_file)
+
+
+    commands.get(args.base_file, lambda *args: None)(args.desired_file)
+    
+
 
     #try:
 
