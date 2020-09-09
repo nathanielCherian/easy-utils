@@ -13,7 +13,6 @@ class BaseFile:
 
     def get_format(self, filename):
         name, extension = os.path.splitext(filename)
-        print("name", name)
         return (name, extension[1:].lower())
 
 

@@ -31,7 +31,7 @@ class ImageBatchFiles(BaseBatchFiles):
         "jpg":"jpeg",
         "jpeg":"jpeg",
         "webp":"webp",
-        "pdf":"pdf",
+        "pdf":"pdf", # spdf is seperated pdf for batch files
     }
 
     accepted_formats = ["png", "jpg", "jpeg", "webp"]
@@ -39,6 +39,14 @@ class ImageBatchFiles(BaseBatchFiles):
     def open(self, filename):
         image = ImageFile.open(self, filename)
         return image
+
+    def convert(self, **kwargs):
+
+        if self.to_format == 'pdf':
+            self.newdir += ".pdf"
+            self.images_to_pdf()
+        else:
+            super().convert(**kwargs)
 
 
     def convert_file(self, **kwargs):
@@ -53,6 +61,26 @@ class ImageBatchFiles(BaseBatchFiles):
 
         super().convert_file(original=name+'.'+extension, result=save_path)
 
+
+    # modified convert, unique to image class
+    def images_to_pdf(self, **kwargs):
+
+        images = []
+        for root, _, files in os.walk(self.dirpath):
+
+            for file_ in files:
+                file_ = os.path.join(root, file_)
+                _, extension = self.get_format(file_)
+                if extension in self.accepted_formats:
+                    images.append(self.open(file_))
+                else:
+                    print(f"skipped '{file_}'")
+
+        images[0].save(self.newdir, 'PDF', resolution=kwargs.get('resolution', 100.0), save_all=True, append_images=images)
+        
+        super().convert_file(original=self.dirpath, result=self.newdir)
+        
+                
 
 
 #Miscellanous functions
