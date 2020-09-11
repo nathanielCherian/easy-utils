@@ -1,6 +1,7 @@
 from . import __title__, __version__
 from .images import ImageFile, ImageBatchFiles, image_from_clipboard
 from .base import BaseBatchFiles
+from .misc import rotate_pdf
 
 import argparse
 
@@ -21,7 +22,8 @@ def parse_args():
 
 
 commands = {
-    "/cb":lambda filename: image_from_clipboard(filename=filename)
+    "/cb":lambda filename: image_from_clipboard(filename=filename),
+    '/rpdf':lambda path: rotate_pdf(path)
 }
 
 

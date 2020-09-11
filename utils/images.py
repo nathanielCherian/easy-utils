@@ -76,7 +76,7 @@ class ImageBatchFiles(BaseBatchFiles):
                 else:
                     print(f"skipped '{file_}'")
 
-        images[0].save(self.newdir, 'PDF', resolution=kwargs.get('resolution', 100.0), save_all=True, append_images=images)
+        images[0].save(self.newdir, 'PDF', resolution=kwargs.get('resolution', 100.0), save_all=True, append_images=images[1:])
         
         super().convert_file(original=self.dirpath, result=self.newdir)
         
