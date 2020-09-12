@@ -11,10 +11,10 @@ def parse_args():
     parser.add_argument("--version", "-v", action="version", version=f"{__title__} {__version__}")
 
     help = "Base file that you have"
-    parser.add_argument("base_file", help=help)
+    parser.add_argument("arg1", help=help)
 
     help = "Desired file name+extension"
-    parser.add_argument("desired_file", help=help)
+    parser.add_argument("arg2", help=help)
 
     args = parser.parse_args()
 
@@ -31,24 +31,24 @@ def main():
     
     args = parse_args()
 
-    print(args.base_file, args.desired_file)
+    print(args.arg1, args.arg2)
 
 
-    commands.get(args.base_file, lambda *args: None)(args.desired_file)
+    commands.get(args.arg1, lambda *args: None)(args.arg2)
     
 
 
     #try:
 
-    #BaseBatchFiles(args.base_file, args.desired_file).convert()
+    #BaseBatchFiles(args.arg1, args.arg2).convert()
 
-    if '.' in args.base_file:
+    if '.' in args.arg1:
 
-        my_file = ImageFile(args.base_file, args.desired_file)
+        my_file = ImageFile(args.arg1, args.arg2)
         my_file.convert()
 
     else:
-        ImageBatchFiles(args.base_file, args.desired_file).convert()
+        ImageBatchFiles(args.arg1, args.arg2).convert()
 
     #except Exception as e:
     #    print("ERROR")
