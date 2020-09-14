@@ -1,4 +1,5 @@
 from .base import BaseFile, BaseBatchFiles
+from .misc import rotate_pdf
 from PIL import Image, ImageGrab
 import os
 
@@ -44,7 +45,7 @@ class ImageBatchFiles(BaseBatchFiles):
 
         if self.to_format == 'pdf':
             self.newdir += ".pdf"
-            self.images_to_pdf()
+            self.images_to_pdf(**kwargs)
         else:
             super().convert(**kwargs)
 
@@ -77,17 +78,21 @@ class ImageBatchFiles(BaseBatchFiles):
                     print(f"skipped '{file_}'")
 
         images[0].save(self.newdir, 'PDF', resolution=kwargs.get('resolution', 100.0), save_all=True, append_images=images[1:])
-        
+
         super().convert_file(original=self.dirpath, result=self.newdir)
         
+        if kwargs.get('r', None):
+            rotate_pdf(self.newdir)    
                 
 
 
 #Miscellanous functions
 def image_from_clipboard(filename='image.png'):
     image = ImageGrab.grabclipboard()
+    assert image, Exception("clipboard does not contain image")
     image.save(filename, 'PNG')
     print("Image saved from clipboard!")
+    return True
 
 
 

@@ -1,9 +1,9 @@
 import PyPDF2
+import os
 
 def rotate_pdf(path, degrees=90):
 
     outpath = str(degrees) + '_' + path
-
     with open(path, 'rb') as in_pdf:
 
         reader = PyPDF2.PdfFileReader(in_pdf)
@@ -14,11 +14,17 @@ def rotate_pdf(path, degrees=90):
             page.rotateClockwise(degrees)
             writer.addPage(page)
 
+
         with open(outpath, 'wb') as out_pdf:
             writer.write(out_pdf)
 
     print(f"'{path}' rotated {degrees} degrees")
 
-# miscellaneous functions
+    return True
 
+
+
+def get_format(filename):
+    name, extension = os.path.splitext(filename)
+    return (name, extension[1:].lower())
 

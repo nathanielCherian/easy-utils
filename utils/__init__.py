@@ -2,11 +2,14 @@
 __title__ = "easy-utils"
 __version__ = "0.0.1"
 
-ACCEPTED_FORMATS = [
-    "png",
-    "jpg",
-    "jpeg",
-    "webp",
-]
+from .images import ImageFile, ImageBatchFiles
 
-from .images import ImageFile
+IMAGE = {"SINGLE":ImageFile, "BATCH":ImageBatchFiles}
+
+ACCEPTED_FORMATS = {
+    "png":IMAGE,
+    "jpg":IMAGE,
+    "jpeg":IMAGE,
+    "webp":IMAGE,
+    "pdf":IMAGE,
+}
