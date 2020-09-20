@@ -1,5 +1,6 @@
 import os
 import pathlib
+from .misc import get_format
 
 __all__ = ("BaseFile", "BaseBatchFiles")
 
@@ -7,8 +8,18 @@ class BaseFile:
 
     def __init__(self, filename, to_filename, **kwargs):
         self.filename = filename
-        self.to_filename = to_filename
         self.replace = kwargs.get("replace", False)
+
+        self.initialize(filename, to_filename, **kwargs)
+
+
+    def initialize(self, filename, to_filename, **kwargs):
+        if '.' in to_filename:
+            self.to_filename = to_filename
+        else:
+            name, _ = self.get_format(filename)
+            self.to_filename = name+'.'+to_filename
+
 
 
     def get_format(self, filename):
@@ -34,7 +45,19 @@ class BaseBatchFiles(BaseFile):
     def __init__(self, dirpath, to_format, **kwargs):
         self.dirpath = dirpath
         self.to_format = to_format
-        self.newdir = kwargs.get("outputdir", self.dirpath+'_'+self.to_format)
+
+        self.initialize(dirpath, to_format, **kwargs)
+
+    def initialize(self, dirpath, to_format, **kwargs):
+
+        if '.' in to_format:
+            assert get_format(to_format)[1] == 'pdf', 'Must provide a name of .pdf type!'
+            name, format_ = get_format(to_format)
+            self.newdir = name
+            self.to_format = format_
+        else:
+            self.newdir = self.dirpath+'_'+self.to_format
+
 
     
     def convert(self, **kwargs):

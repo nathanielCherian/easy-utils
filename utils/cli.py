@@ -15,7 +15,6 @@ Commands:
   /rpdf [PDF PATH] : rotates pdf
 
 """
-
 def parse_args():
     parser = argparse.ArgumentParser(prog='utils',
     formatter_class=argparse.RawDescriptionHelpFormatter, 
@@ -30,7 +29,7 @@ def parse_args():
     parser.add_argument("arg2", help=help)
 
     help = "rotate image/pdf with action R°"
-    parser.add_argument('-r', action="store", help=help)
+    parser.add_argument('-r', action="store", type=int, help=help)
 
 
     args = parser.parse_args()
@@ -39,10 +38,7 @@ def parse_args():
 
 
 
-commands = {
-    "/cb":lambda filename: image_from_clipboard(filename=filename),
-    '/rpdf':lambda path: rotate_pdf(path)
-}
+
 
 def args_to_class(args):
 
@@ -53,11 +49,22 @@ def args_to_class(args):
         return ConvertFile
 
     else:
-        ConvertBatchFile = ACCEPTED_FORMATS.get(args.arg2.lower(), None)["BATCH"]
+
+        format_ = args.arg2
+
+        if '.' in format_:
+            _, format_= get_format(args.arg2)
+
+        ConvertBatchFile = ACCEPTED_FORMATS.get(format_.lower(), None)["BATCH"]
         return ConvertBatchFile
 
     return
 
+
+commands = {
+    "/cb":lambda filename: image_from_clipboard(filename=filename),
+    '/rpdf':lambda path: rotate_pdf(path)
+}
 
 def main():
     
@@ -71,42 +78,19 @@ def main():
         return True
 
 
-    ConvertFile = args_to_class(args)
-    if ConvertFile:
+    ConvertClass = args_to_class(args)
+    if ConvertClass:
 
-            my_file = ConvertFile(args.arg1, args.arg2)
+            my_file = ConvertClass(args.arg1, args.arg2)
             my_file.convert(**args.__dict__)
+
 
 
     else:
         print("arguments not found.")
 
 
-    #except Exception as e:
-    #    print(e)
 
-    """
-    commands.get(args.arg1, lambda *args: None)(args.arg2)
-    
-
-
-    #try:
-
-    #BaseBatchFiles(args.arg1, args.arg2).convert()
-
-    if '.' in args.arg1:
-
-        my_file = ImageFile(args.arg1, args.arg2)
-        my_file.convert()
-
-    else:
-        ImageBatchFiles(args.arg1, args.arg2).convert()
-
-    #except Exception as e:
-    #    print("ERROR")
-    #    print(e)
-
-    """
 
 if __name__ == "__main__":
     main()
