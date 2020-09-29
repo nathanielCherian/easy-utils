@@ -1,6 +1,9 @@
 # easy-utils
 All in one file converter built in python
 
+# Installation
+```$ pip install git+git://github.com/nathanielCherian/easy-utils`
+
 # Usage
 Convert files in command line with
 
